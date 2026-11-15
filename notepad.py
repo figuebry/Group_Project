@@ -120,8 +120,8 @@ def api_response(response):
 def currency_request():
 
     amount = float(input("Enter amount: "))
-    from_currency = input("Convert from (USD/EUR/GBP/CAD): ").upper()
-    to_currency = input("Convert to (USD/EUR/GBP/CAD): ").upper()
+    from_currency = input("Convert from: ").upper()
+    to_currency = input("Convert to: ").upper()
 
     data = {
         "amount": amount,
