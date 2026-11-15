@@ -71,7 +71,7 @@ def edit_text():
 # Notification API
 # -------------------------
 
-def api_request():
+def api_request_notification():
 
     notification_type = input("Enter notification type: ")
     recipient = input("Enter recipient: ")
@@ -190,7 +190,7 @@ def main():
         elif choice == "5":
             save_as()
         elif choice == "6":
-            api_request()
+            api_request_notification()
         elif choice == "7":
             currency_request()
         elif choice == "8":
