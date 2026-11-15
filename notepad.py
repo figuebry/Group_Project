@@ -163,6 +163,46 @@ def currency_response(response):
         print("\nCurrency conversion error:")
         print(result["message"])
 
+# -------------------------
+# Deadline API
+# -------------------------
+
+def deadline_request():
+
+    deadline = input("Enter deadline (YYYY-MM-DD): ")
+
+    data = {
+        "deadline": deadline
+    }
+
+    try:
+        response = requests.post(
+            "http://localhost:5000/calculate",
+            json=data,
+            timeout=5
+        )
+
+        deadline_response(response)
+
+    except requests.exceptions.RequestException as error:
+        print("Unable to connect to deadline service.")
+        print(error)
+
+
+def deadline_response(response):
+
+    result = response.json()
+
+    if response.status_code == 200:
+        print("\nDeadline calculation successful!")
+        print(f'Deadline: {result["deadline"]}')
+        print(f'Days remaining: {result["days_remaining"]}')
+        print(f'Status: {result["status"]}')
+
+    else:
+        print("\nDeadline calculation error:")
+        print(result["error"])
+
 
 # -------------------------
 # Main Application
@@ -178,7 +218,8 @@ def main():
         print("5. Save As")
         print("6. Send Notification")
         print("7. Convert Currency")
-        print("8. Exit")
+        print("8. Calculate Days Remaining")
+        print("9. Exit")
 
         choice = input("Select an option: ")
 
@@ -197,6 +238,8 @@ def main():
         elif choice == "7":
             currency_request()
         elif choice == "8":
+            deadline_request()
+        elif choice == "9":
             print("Goodbye!")
             break
         else:
