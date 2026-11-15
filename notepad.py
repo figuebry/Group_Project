@@ -1,3 +1,6 @@
+# Currently using two microservices via REST API
+# Currency converter and notification service functional
+
 
 import requests
 
