@@ -71,6 +71,87 @@ def edit_text():
 
 
 # -------------------------
+# Search and Filter API
+# -------------------------
+
+
+SEARCH_URL = "http://127.0.0.1:5003/search_filter"
+
+
+def call_search_service(records, query="", search_fields=None, filters=None):
+
+    data = {
+        "records": records,
+        "query": query,
+        "filters": filters or {}
+    }
+
+    if search_fields is not None:
+        data["search_fields"] = search_fields
+
+    response = requests.post(
+        SEARCH_URL,
+        json=data,
+        timeout=5
+    )
+
+    response.raise_for_status()
+
+    return response.json()["results"]
+
+def search_document():
+
+    if not text:
+        print("There is no document text to search.")
+        return
+
+    records = [{"text": line} for line in text.splitlines()]
+
+    query = input("Enter search term: ")
+
+    try:
+        results = call_search_service(
+            records,
+            query=query,
+            search_fields=["text"]
+        )
+
+        print(f"\nFound {len(results)} matching lines:")
+
+        for result in results:
+            print(result["text"])
+
+    except requests.exceptions.RequestException as error:
+        print("Unable to connect to search service.")
+        print(error)
+
+def filter_document():
+
+    if not text:
+        print("There is no document text to filter.")
+        return
+
+    records = [{"text": line} for line in text.splitlines()]
+
+    query = input("Enter the exact text of the line to find: ")
+
+    try:
+        results = call_search_service(
+            records,
+            filters={"text": query}
+        )
+
+        print(f"\nFound {len(results)} matching lines:")
+
+        for result in results:
+            print(result["text"])
+
+    except requests.exceptions.RequestException as error:
+        print("Unable to connect to search service.")
+        print(error)
+
+
+# -------------------------
 # Notification API
 # -------------------------
 
@@ -219,7 +300,9 @@ def main():
         print("6. Send Notification")
         print("7. Convert Currency")
         print("8. Calculate Days Remaining")
-        print("9. Exit")
+        print("9. Search Document")
+        print("10. Filter Document")
+        print("11. Exit")
 
         choice = input("Select an option: ")
 
@@ -240,10 +323,14 @@ def main():
         elif choice == "8":
             deadline_request()
         elif choice == "9":
+            search_document()
+        elif choice == "10":
+            filter_document()
+        elif choice == "11":  
             print("Goodbye!")
             break
         else:
-            print("Invalid selection.")
+            print("Invalid option. Please try again.")
 
 
 if __name__ == "__main__":
